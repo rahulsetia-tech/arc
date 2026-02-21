@@ -471,4 +471,52 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 2,
   },
+  badgesScroll: {
+    marginTop: 12,
+  },
+  badgesContainer: {
+    paddingHorizontal: 4,
+    gap: 12,
+  },
+  badgeCard: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#00FF88',
+    width: 120,
+  },
+  badgeCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#0D0D0D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    borderWidth: 2,
+    borderColor: '#00FF88',
+  },
+  badgeIcon: {
+    fontSize: 28,
+  },
+  badgeName: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  badgeDescription: {
+    color: '#666',
+    fontSize: 9,
+    textAlign: 'center',
+  },
+  emptyBadgesText: {
+    color: '#666',
+    fontSize: 14,
+    textAlign: 'center',
+    padding: 16,
+  },
 });
