@@ -1,6 +1,16 @@
 import { Tabs } from 'expo-router';
-import { Platform, View, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+const MapIcon = ({ color, size }: { color: string; size: number }) => (
+  <Ionicons name="map" size={size} color={color} />
+);
+const TrophyIcon = ({ color, size }: { color: string; size: number }) => (
+  <Ionicons name="trophy" size={size} color={color} />
+);
+const PersonIcon = ({ color, size }: { color: string; size: number }) => (
+  <Ionicons name="person" size={size} color={color} />
+);
 
 export default function TabsLayout() {
   return (
@@ -18,27 +28,21 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'MAP',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="map" size={size} color={color} />
-          ),
+          tabBarIcon: MapIcon,
         }}
       />
       <Tabs.Screen
         name="leaderboard"
         options={{
           title: 'RANKS',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="trophy" size={size} color={color} />
-          ),
+          tabBarIcon: TrophyIcon,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'PROFILE',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
-          ),
+          tabBarIcon: PersonIcon,
         }}
       />
     </Tabs>
