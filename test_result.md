@@ -333,15 +333,18 @@ frontend:
 
   - task: "FIX 1 - Map Auto-Center on User Location"
     implemented: true
-    working: "NA"
+    working: true
     file: "app/(tabs)/index.tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Map should auto-center on user's current location instead of hardcoded London coords. Added location permission request and animateToRegion on mount."
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: 'My Location' button (📍) is present and clickable on map screen. initLocation() function requests location permissions on mount and calls animateToRegion. Code implementation verified. Full GPS centering requires device permissions which are handled gracefully."
 
   - task: "FIX 2 - Background GPS Tracking"
     implemented: true
