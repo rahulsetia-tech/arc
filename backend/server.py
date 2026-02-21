@@ -326,6 +326,66 @@ async def get_me(current_user: dict = Depends(get_current_user)):
 
 
 # ============================================================
+# BADGE SYSTEM
+# ============================================================
+
+BADGE_DEFINITIONS = [
+    {"id": "first_run", "name": "First Steps", "icon": "👟", "description": "Complete your first run", "condition": "totalRuns >= 1"},
+    {"id": "5_runs", "name": "Getting Started", "icon": "🏃", "description": "Complete 5 runs", "condition": "totalRuns >= 5"},
+    {"id": "10_runs", "name": "Regular Runner", "icon": "🏅", "description": "Complete 10 runs", "condition": "totalRuns >= 10"},
+    {"id": "25_runs", "name": "Dedicated", "icon": "💪", "description": "Complete 25 runs", "condition": "totalRuns >= 25"},
+    {"id": "first_steal", "name": "Territory Thief", "icon": "⚔️", "description": "Steal territory for the first time", "condition": "special"},
+    {"id": "5km_total", "name": "5K Club", "icon": "📍", "description": "Run a total of 5km", "condition": "totalDistanceKm >= 5"},
+    {"id": "10km_total", "name": "10K Club", "icon": "🏁", "description": "Run a total of 10km", "condition": "totalDistanceKm >= 10"},
+    {"id": "50km_total", "name": "Marathon+", "icon": "🏆", "description": "Run a total of 50km", "condition": "totalDistanceKm >= 50"},
+    {"id": "first_km2", "name": "Landlord", "icon": "🗺️", "description": "Own 1 km² of territory", "condition": "totalAreaKm2 >= 1"},
+    {"id": "streak_3", "name": "On Fire", "icon": "🔥", "description": "3 day run streak", "condition": "currentStreak >= 3"},
+    {"id": "streak_7", "name": "Week Warrior", "icon": "⚡", "description": "7 day run streak", "condition": "currentStreak >= 7"},
+    {"id": "streak_30", "name": "Unstoppable", "icon": "👑", "description": "30 day run streak", "condition": "currentStreak >= 30"},
+]
+
+async def check_and_award_badges(user_id: str, stolen_count: int = 0):
+    """Check all badge conditions and award any newly earned badges."""
+    user = await db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return []
+    
+    existing_badges = await db.badges.find({"userId": ObjectId(user_id)}).to_list(100)
+    existing_ids = {b["badgeId"] for b in existing_badges}
+    
+    new_badges = []
+    for badge_def in BADGE_DEFINITIONS:
+        if badge_def["id"] in existing_ids:
+            continue
+        
+        earned = False
+        if badge_def["condition"] == "special":
+            if badge_def["id"] == "first_steal" and stolen_count > 0:
+                earned = True
+        else:
+            # Parse condition like "totalRuns >= 1"
+            parts = badge_def["condition"].split(" ")
+            field, op, value = parts[0], parts[1], float(parts[2])
+            user_value = user.get(field, 0)
+            if op == ">=" and user_value >= value:
+                earned = True
+        
+        if earned:
+            badge_doc = {
+                "userId": ObjectId(user_id),
+                "badgeId": badge_def["id"],
+                "name": badge_def["name"],
+                "icon": badge_def["icon"],
+                "description": badge_def["description"],
+                "earnedAt": datetime.utcnow()
+            }
+            await db.badges.insert_one(badge_doc)
+            new_badges.append({"id": badge_def["id"], "name": badge_def["name"], "icon": badge_def["icon"], "description": badge_def["description"]})
+    
+    return new_badges
+
+
+# ============================================================
 # RUN ROUTES
 # ============================================================
 
