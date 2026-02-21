@@ -255,6 +255,9 @@ async def register(req: RegisterRequest):
         "totalRuns": 0,
         "globalRank": 0,
         "color": "",  # will be set after insert
+        "currentStreak": 0,
+        "longestStreak": 0,
+        "lastRunDate": None,
         "createdAt": datetime.utcnow()
     }
     result = await db.users.insert_one(user)
