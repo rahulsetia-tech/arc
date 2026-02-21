@@ -363,15 +363,18 @@ frontend:
 
   - task: "FIX 4 - Global/Local Leaderboard Toggle"
     implemented: true
-    working: "NA"
+    working: true
     file: "app/(tabs)/leaderboard.tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added toggle buttons for Global vs Local leaderboard. Fetches user location on mount and calls appropriate API based on mode."
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Global/Local toggle buttons found and fully functional. Clicking 'GLOBAL' shows subtitle 'Global Rankings by Territory'. Clicking 'LOCAL' shows subtitle 'Local Rankings (20km radius)' and requests location. UI updates correctly between modes. Leaderboard displays 9 users with proper ranks, stats, and territory data."
 
   - task: "FIX 5 - Auto-Refresh Territories After Run"
     implemented: true
