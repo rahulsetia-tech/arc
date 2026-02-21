@@ -636,6 +636,7 @@ async def get_local_leaderboard(
     current_user: dict = Depends(get_current_user)
 ):
     """Get leaderboard for users with territory near a location."""
+    # Query territories near the point using $geoIntersects
     pipeline = [
         {"$match": {
             "polygon": {
@@ -651,8 +652,27 @@ async def get_local_leaderboard(
         {"$sort": {"totalArea": -1}},
         {"$limit": 50}
     ]
-    # Simplified: return global for now
-    return await get_global_leaderboard(current_user)
+    
+    # Execute aggregation to get userId and totalArea
+    agg_results = await db.territories.aggregate(pipeline).to_list(100)
+    
+    # Now fetch full user details for each userId
+    result = []
+    for idx, item in enumerate(agg_results):
+        user_id = item["_id"]
+        user = await db.users.find_one({"_id": ObjectId(user_id)})
+        if user:
+            result.append({
+                "rank": idx + 1,
+                "id": str(user["_id"]),
+                "username": user["username"],
+                "totalAreaKm2": item["totalArea"],
+                "totalDistanceKm": user.get("totalDistanceKm", 0.0),
+                "totalRuns": user.get("totalRuns", 0),
+                "color": user.get("color", user_color(str(user["_id"])))
+            })
+    
+    return result
 
 
 # ============================================================
