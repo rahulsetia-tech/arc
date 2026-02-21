@@ -841,6 +841,117 @@ async def update_user_profile(
 # TEST ROUTE
 # ============================================================
 
+# ============================================================
+# BADGE ROUTES
+# ============================================================
+
+@api_router.get("/badges/{user_id}")
+async def get_user_badges(user_id: str, current_user: dict = Depends(get_current_user)):
+    badges = await db.badges.find({"userId": ObjectId(user_id)}, sort=[("earnedAt", -1)]).to_list(100)
+    return [serialize_doc(b) for b in badges]
+
+
+@api_router.get("/badges/definitions/all")
+async def get_all_badge_definitions():
+    return BADGE_DEFINITIONS
+
+
+# ============================================================
+# COMPETITION ROUTES
+# ============================================================
+
+@api_router.get("/competition/current")
+async def get_current_competition(current_user: dict = Depends(get_current_user)):
+    """Get the current month's competition info."""
+    now = datetime.utcnow()
+    # Competition runs from 1st to last day of each month
+    if now.month == 12:
+        end_of_month = datetime(now.year + 1, 1, 1) - timedelta(seconds=1)
+    else:
+        end_of_month = datetime(now.year, now.month + 1, 1) - timedelta(seconds=1)
+    
+    start_of_month = datetime(now.year, now.month, 1)
+    
+    # Count territory captured this month by the current user
+    user_id = current_user["user_id"]
+    month_territories = await db.territories.find({
+        "userId": ObjectId(user_id),
+        "capturedAt": {"$gte": start_of_month}
+    }).to_list(500)
+    
+    user_area_this_month = sum(t.get("areaKm2", 0) for t in month_territories)
+    entries = max(1, int(user_area_this_month))  # 1 entry per km²
+    
+    # Top 10 this month (across all users)
+    pipeline = [
+        {"$match": {"capturedAt": {"$gte": start_of_month}}},
+        {"$group": {"_id": "$userId", "totalArea": {"$sum": "$areaKm2"}, "username": {"$first": "$username"}}},
+        {"$sort": {"totalArea": -1}},
+        {"$limit": 10}
+    ]
+    top_runners = await db.territories.aggregate(pipeline).to_list(10)
+    
+    return {
+        "month": now.strftime("%B %Y"),
+        "endsAt": end_of_month.isoformat(),
+        "secondsRemaining": int((end_of_month - now).total_seconds()),
+        "userAreaThisMonth": round(user_area_this_month, 4),
+        "userEntries": entries,
+        "topRunners": [
+            {"username": r.get("username", "unknown"), "areaKm2": round(r["totalArea"], 4)}
+            for r in top_runners
+        ]
+    }
+
+
+# ============================================================
+# NOTIFICATION ROUTES
+# ============================================================
+
+class PushTokenRequest(BaseModel):
+    token: str
+    platform: str  # "ios" or "android"
+
+
+@api_router.post("/users/push-token")
+async def save_push_token(req: PushTokenRequest, current_user: dict = Depends(get_current_user)):
+    await db.push_tokens.update_one(
+        {"userId": ObjectId(current_user["user_id"])},
+        {"$set": {
+            "userId": ObjectId(current_user["user_id"]),
+            "token": req.token,
+            "platform": req.platform,
+            "updatedAt": datetime.utcnow()
+        }},
+        upsert=True
+    )
+    return {"status": "ok"}
+
+
+@api_router.get("/notifications")
+async def get_notifications(current_user: dict = Depends(get_current_user)):
+    user_id = current_user["user_id"]
+    notifications = await db.notifications.find(
+        {"userId": ObjectId(user_id)},
+        sort=[("createdAt", -1)],
+        limit=50
+    ).to_list(50)
+    return [serialize_doc(n) for n in notifications]
+
+
+@api_router.post("/notifications/read-all")
+async def mark_all_read(current_user: dict = Depends(get_current_user)):
+    await db.notifications.update_many(
+        {"userId": ObjectId(current_user["user_id"]), "read": False},
+        {"$set": {"read": True}}
+    )
+    return {"status": "ok"}
+
+
+# ============================================================
+# TEST ROUTES
+# ============================================================
+
 @api_router.get("/test/territory")
 async def test_territory(
     lat: float = Query(default=51.5074),
