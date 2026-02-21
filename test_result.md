@@ -330,6 +330,6 @@ test_plan:
 
 agent_communication:
   - agent: "testing"
-    message: "Starting comprehensive backend API testing for SUPERACRES app. Frontend testing will not be performed as per instructions. Backend URL: https://acres-live.preview.emergentagent.com/api"
+    message: "Starting comprehensive backend API testing for SUPERACRES app. Frontend testing will not be performed as per instructions. Backend URL: https://neon-running-game.preview.emergentagent.com/api"
   - agent: "testing"
     message: "✅ BACKEND TESTING COMPLETE: All 9/9 backend API tests passed successfully. Territory computation, authentication, run tracking, and leaderboard all working correctly."

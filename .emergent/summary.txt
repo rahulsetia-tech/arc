@@ -1,0 +1,252 @@
+<analysis>**original_problem_statement:**
+The user wants to build a gamified GPS running app called **SUPERACRES**. The core concept is that users capture real-world territory on a shared map by running.
+
+**PRODUCT REQUIREMENTS (Initial Build):**
+1.  **Authentication:** Simple email/password signup and login.
+2.  **Map Home Screen:** A full-screen  view showing all users' territories as colored polygons. It should show the user's current location and have a prominent START RUN button.
+3.  **Active Run Screen:** Live GPS tracking that draws the user's route in real-time. It displays stats (pace, distance, time) and has a STOP RUN button.
+4.  **Run Summary Screen:** A post-run recap showing the route, captured territory, and stats.
+5.  **Leaderboard & Profile Screens:** Basic screens to show user rankings by territory and individual user stats.
+6.  **Backend:** A FastAPI backend to handle auth, run processing, and territory computation. The core logic involves using a geospatial library ( or equivalent) to create a territory polygon from a run's GPS track (), calculate overlaps with existing territories (), and update ownership.
+7.  **Database:** MongoDB with  geospatial indexes for storing users, runs, and territories.
+8.  **Design:** A dark, game-like UI with neon accents.
+
+**LATEST REQUIREMENTS (7 Fixes):**
+After the initial build, the user requested 7 critical fixes and improvements:
+1.  **FIX 1:** Auto-center the map on the user's current location instead of a hardcoded location (London).
+2.  **FIX 2:** Implement background GPS tracking for active runs using .
+3.  **FIX 3:** Fix the local leaderboard backend to perform a real geospatial query instead of returning the global leaderboard.
+4.  **FIX 4:** Add a Global vs. Local toggle on the Leaderboard screen.
+5.  **FIX 5:** Automatically refresh territories on the map screen when a user returns after a run.
+6.  **FIX 6:** Handle  geometry on the frontend, as territory subtractions can split a polygon into multiple parts.
+7.  **FIX 7:** Improve the active run UX with a pulsing recording dot, haptic feedback, and a calorie estimate.
+
+**User's preferred language**: English
+
+**what currently exists?**
+The agent has successfully completed the initial build of the SUPERACRES application. This includes a fully functional FastAPI backend with all required endpoints for authentication, run tracking, and territory management. The frontend is a React Native Expo application featuring all the specified screens (Auth, Map, Active Run, Summary, Leaderboard, Profile) with navigation and styling according to the user's dark-theme specification. The agent also implemented platform-specific components ( and ) to handle the map's web compatibility. The initial version of the app has been tested and key screens have been verified via screenshots.
+
+**Last working item**:
+- **Last item agent was working:** The agent was in the middle of implementing the 7 critical fixes requested by the user. It used the  tool to write the necessary code changes across the backend () and frontend (, , , and map components). The last specific action was writing the code for the Leaderboard screen toggle.
+- **Status:** IN PROGRESS
+- **Agent Testing Done:** N (The new code for the 7 fixes has been written but not yet tested).
+- **Which testing method agent to use?** both
+- **User Testing Done:** N
+
+**All Pending/In progress Issue list**:
+- **Issue 1 (P0):** Implement and test the 7 critical fixes. The code has been written, but dependencies are missing and no testing has been performed.
+
+**Issues Detail:**
+- **Issue 1: Implement and Test the 7 Fixes**
+    - **Attempted fixes:** The agent has written the code for all 7 fixes across the relevant frontend and backend files. However, it has not yet installed the required  dependency, restarted the services, or run any tests to verify the changes.
+    - **Next debug checklist:**
+        1.  **Install Dependency:** Run env: load .env
+env: export EXPO_TUNNEL_SUBDOMAIN EXPO_PACKAGER_HOSTNAME EXPO_PUBLIC_BACKEND_URL EXPO_USE_FAST_RESOLVER METRO_CACHE_ROOT
+› Installing 1 SDK 54.0.0 compatible native module using yarn
+> yarn add expo-task-manager@~14.0.9
+yarn add v1.22.22
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved 0 new dependencies.
+Done in 9.65s. in the  directory.
+        2.  **Restart Services:** Restart both the  and 
+  Usage: expo [command] [options]
+
+  Options:
+  
+    -V, --version                     output the version number
+    --non-interactive                 Fail, if an interactive prompt would be required to continue.
+    -h, --help                        output usage information
+  
+  Commands:
+
+    init [name]                       Create a new Expo project
+    start [path]                      Start a local dev server for the app
+    start:web [path]                  Start a Webpack dev server for the web app
+    export [path]                     Export the static files of the app for hosting it on a web server
+    install [packages...]             Install a module or other package to a project
+    run:android [path]                Run the Android app binary locally
+    run:ios [path]                    Run the iOS app binary locally
+    send [path]                       Share the project's URL to an email address
+
+    login                             Login to an Expo account
+    logout                            Logout of an Expo account
+    register                          Sign up for a new Expo account
+    whoami                            Return the currently authenticated account
+
+    client:install:ios                Install Expo Go for iOS on the simulator
+    client:install:android            Install Expo Go for Android on a connected device or emulator
+
+    config [path]                     Show the project config
+    doctor [path]                     Diagnose issues with the project
+    upgrade [sdk-version]             Upgrade the project packages and config for the given SDK version
+
+    customize:web [path]              Eject the default web files for customization
+    prebuild [path]                   Create native iOS and Android project files before building natively.
+                                      Learn more: https://docs.expo.dev/workflow/customizing/
+
+    build:web [path]                  Build the web app for production
+
+    credentials:manager [path]        Superseded by eas credentials in eas-cli
+
+    url [path]                        Log a URL for opening the project in Expo Go
+    url:ipa [path]                    Log the download URL for the standalone iOS binary
+    url:apk [path]                    Log the download URL for the standalone Android binary
+
+    webhooks [path]                   List all webhooks for a project
+    webhooks:add [path]               Add a webhook to a project
+    webhooks:remove [path]            Delete a webhook
+    webhooks:update [path]            Update an existing webhook
+
+    build:ios [path]                  Superseded by eas build in eas-cli
+    build:android [path]              Superseded by eas build in eas-cli
+    build:status [path]               Superseded by eas build:list in eas-cli
+    eject [path]                      Superseded by expo prebuild
+    fetch:ios:certs [path]            Superseded by eas credentials in eas-cli
+    fetch:android:keystore [path]     Superseded by eas credentials in eas-cli
+    fetch:android:hashes [path]       Superseded by eas credentials in eas-cli
+    fetch:android:upload-cert [path]  Superseded by eas credentials in eas-cli
+    publish [path]                    Superseded by eas update in eas-cli
+    publish:set [path]                Superseded by eas update:republish in eas-cli
+    publish:rollback [path]           Superseded by eas update:republish in eas-cli
+    publish:history [path]            Superseded by eas update:list in eas-cli
+    publish:details [path]            Superseded by eas update:view in eas-cli
+    push:android:upload [path]        Superseded by eas credentials in eas-cli
+    push:android:show [path]          Superseded by eas credentials in eas-cli
+    push:android:clear [path]         Superseded by eas credentials in eas-cli
+    upload:android [path]             Superseded by eas submit in eas-cli
+    upload:ios [path]                 Superseded by eas submit in eas-cli
+    client:ios [path]                 Superseded by Expo Dev Clients
+
+[18:05:56]   Run a command with --help for more info 💡
+[18:05:56]     $ expo start --help
+[18:05:56] supervisor services to apply all changes.
+        3.  **Test Backend (Fix 3):** Use  to test the  endpoint with lat/lng parameters to ensure it returns a location-specific list, not the global one.
+        4.  **Test Frontend (Fix 1, 4, 5):**
+            - Verify the map screen () requests location permission and centers on the user's location on load.
+            - Test the My Location button.
+            - Navigate to the Leaderboard (), verify the Global/Local toggle appears, and test its functionality.
+            - Complete a run and verify that when returning to the map, the new territory is displayed immediately (test ).
+        5.  **Test Frontend (Fix 2, 7):**
+            - Start a run and verify the recording dot pulses, haptics fire, and the calorie counter appears.
+            - Simulate the app going into the background (if possible in the test environment) to confirm background tracking is initiated. Verify the  is registered.
+        6.  **Test Frontend (Fix 6):** This is harder to test without a specific scenario. A dedicated test case might be needed where a run is designed to split an existing territory, creating a . Check the logs for errors if such a scenario occurs naturally during testing.
+    - **Why fix this issue and what will be achieved with the fix?** These fixes address critical usability and functionality gaps in the MVP, such as the map not centering, GPS stopping when the phone is locked, and an incorrect local leaderboard. Resolving them will make the app viable for real-world use.
+    - **Status:** IN PROGRESS
+    - **Is recurring issue?** N
+    - **Should Test frontend/backend/both after fix?** both
+    - **Blocked on other issue:** The agent forgot to install the  dependency, which is a blocker for Fix #2 (Background GPS).
+
+**In progress Task List**:
+- **Task 1: Complete the implementation of the 7 fixes**
+    - **Where to resume:** The code has been written. The next agent must start by installing the missing  dependency. Then, it should restart services and systematically test each of the 7 fixes as outlined in the checklist above.
+    - **What will be achieved with this?** A more robust, feature-complete, and user-friendly version of the application that is closer to a real-world MVP.
+    - **Status:** IN PROGRESS
+    - **Should Test frontend/backend/both after fix?** both
+    - **Blocked on something:** Installation of .
+
+**Upcoming and Future Tasks**
+**Upcoming Tasks (Phase 4):**
+-   **P1: Shareable Run Summary Card:** Enhance the run summary screen to generate a shareable image.
+-   **P1: Celebratory Animations:** Add animations (e.g., confetti, glow) on the run summary screen.
+-   **P2: Streak Counter:** Implement logic to track consecutive days with a run.
+
+**Future Tasks (Phase 5):**
+-   **P2: Badges/Achievements:** Implement a system for awarding badges (e.g., first run, first territory steal).
+-   **P3: Push Notifications:** Notify users when their territory has been stolen.
+-   **P3: Route Planner:** Allow users to draw a route on the map before they start a run.
+-   **P3: Personal Territory Heatmap:** Add a view to the profile screen showing a heatmap of all captured territories.
+
+**Completed work in this session**
+-   **Backend (FastAPI):**
+    -   Implemented and tested all core API endpoints (, , , , ).
+    -   Developed the core territory computation logic using  in .
+-   **Frontend (React Native / Expo):**
+    -   Created all primary screens: Auth (Login/Register), Map, Active Run, Run Summary, Leaderboard, Profile.
+    -   Set up file-based routing with , including  and  layout groups.
+    -   Implemented platform-specific map components (, ) to solve web-compatibility issues.
+    -   Styled the entire application based on the user's dark-theme design system.
+    -   Verified the initial UI and functionality with screenshots and flow testing.
+
+**Earlier issues found/mentioned but not fixed**
+None. All issues identified during the initial build phase were resolved. The current pending items are the new feature requests (the 7 fixes).
+
+**Known issue recurrence from previous fork**
+N/A
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Frontend:** React Native, Expo, Expo Router, TypeScript, , .
+-   **Backend:** Python, FastAPI, Motor (async MongoDB driver).
+-   **Database:** MongoDB with  geospatial indexes.
+-   **Geospatial:**  library on the backend for all geometric calculations (buffer, difference, union). GeoJSON is the standard format for all geospatial data.
+-   **Authentication:** JWT-based, with tokens stored on the client in .
+-   **Architecture:** Monorepo with distinct  and  services. Platform-specific file extensions (, ) are used for cross-platform compatibility.
+
+**key DB schema**
+-   **users:** 
+-   **runs:** 
+-   **territories:**  (A  index is on ).
+
+**changes in tech stack**
+-   The user prompt mentioned , but the agent implemented the backend geospatial logic using the Python library ****, which serves as the Python equivalent.
+
+**All files of reference**
+-   : Contains the entire backend logic, including all API endpoints and territory computation. Recently modified to fix the local leaderboard query.
+-   : The main map screen. Recently modified to add location detection, a my location button, and auto-refresh on focus.
+-   : The active run screen. Recently modified to add background GPS tracking logic, haptic feedback, and UI improvements.
+-   : The leaderboard screen. Recently modified to add a Global/Local toggle and fetch local data.
+-    & : The map components. Recently modified to handle  data.
+-   : API utility file. Recently modified to add the  function.
+-   : Needs  to be added as a dependency.
+
+**Areas that need refactoring**:
+N/A
+
+**key api endpoints**
+-   
+-   
+-   
+-   
+-   
+-    (This was just fixed)
+-   
+
+**Critical Info for New Agent**
+-   The immediate priority is to finish the 7 fixes. Start by installing .
+-   The backend uses  for all geospatial logic, not . The logic is in .
+-   The frontend uses platform-specific files (, ) to render the map component. Changes to the map must be applied to both files.
+-   The code for the 7 fixes has already been written. Your job is to install the missing dependency, restart, test, and debug until all 7 are confirmed working.
+
+**documents and test reports created in this job**
+-   
+
+**Last 10 User Messages and any pending HUMAN messages**
+The user has provided two main prompts:
+1.  **Initial Project Prompt:** A detailed specification for building the SUPERACRES app from scratch. (Status: COMPLETED)
+2.  **7 Fixes Prompt:** A detailed list of 7 critical fixes and improvements for the existing app. (Status: IN PROGRESS)
+
+**Project Health Check:**
+-   **Broken:** The features targeted by the 7 fixes are currently considered broken or incomplete (e.g., background GPS, local leaderboard, map centering).
+-   **Mocked:** No data or features are mocked. The app uses real GPS data and live API calls.
+
+**3rd Party Integrations**
+None.
+
+**Testing status**
+-   **Testing agent used after significant changes:** YES (for the initial build).
+-   **Troubleshoot agent used after agent stuck in loop:** NO.
+-   **Test files created:** None are persistent in the project.
+-   **Known regressions:** None yet, but the new changes for the 7 fixes are untested and may have introduced regressions.
+
+**Credentials to test flow:**
+You can register new users or use the ones created during previous tests, such as:
+-   **username:** 
+-   **password:** 
+
+**What agent forgot to execute**
+-   The agent wrote the code for Fix #2 (Background GPS) but **forgot to install the required  dependency**. This is the first action the next agent must take.</analysis>

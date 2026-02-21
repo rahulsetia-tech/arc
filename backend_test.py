@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Use the production backend URL from frontend/.env
-BASE_URL = "https://acres-live.preview.emergentagent.com/api"
+BASE_URL = "https://neon-running-game.preview.emergentagent.com/api"
 
 class SuperacresAPITester:
     def __init__(self):
