@@ -331,6 +331,78 @@ frontend:
         agent: "testing"
         comment: "Frontend testing not performed by testing agent as per instructions"
 
+  - task: "FIX 1 - Map Auto-Center on User Location"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)/index.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Map should auto-center on user's current location instead of hardcoded London coords. Added location permission request and animateToRegion on mount."
+
+  - task: "FIX 2 - Background GPS Tracking"
+    implemented: true
+    working: "NA"
+    file: "app/run/active.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "GPS tracking should continue in background when phone is locked. Installed expo-task-manager and registered BACKGROUND_LOCATION_TASK. Task buffers locations to AsyncStorage during background tracking."
+
+  - task: "FIX 4 - Global/Local Leaderboard Toggle"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)/leaderboard.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added toggle buttons for Global vs Local leaderboard. Fetches user location on mount and calls appropriate API based on mode."
+
+  - task: "FIX 5 - Auto-Refresh Territories After Run"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)/index.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Map screen should reload territories when user returns from a run. Added useFocusEffect to fetchTerritories on screen focus."
+
+  - task: "FIX 6 - MultiPolygon Geometry Support"
+    implemented: true
+    working: "NA"
+    file: "src/components/TerritoryMap.native.tsx and TerritoryMap.web.tsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Territory subtraction can create MultiPolygon geometry. Added conditional rendering to handle both Polygon and MultiPolygon types in map components."
+
+  - task: "FIX 7 - Improved Active Run UX"
+    implemented: true
+    working: "NA"
+    file: "app/run/active.tsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Enhanced active run screen with pulsing recording dot, haptic feedback on start/stop, and calorie estimate (simplified: calories = distance * 65). Haptics fire using Expo.Haptics.impactAsync."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
