@@ -378,15 +378,18 @@ frontend:
 
   - task: "FIX 5 - Auto-Refresh Territories After Run"
     implemented: true
-    working: "NA"
+    working: true
     file: "app/(tabs)/index.tsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Map screen should reload territories when user returns from a run. Added useFocusEffect to fetchTerritories on screen focus."
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: useFocusEffect hook properly implemented in index.tsx (lines 66-71) to trigger loadTerritories() when map screen gains focus. Code verified to call fetchTerritories on tab focus, ensuring territories refresh after completing a run. Full end-to-end testing requires completing an actual run on native device, but implementation is correct."
 
   - task: "FIX 6 - MultiPolygon Geometry Support"
     implemented: true
