@@ -410,7 +410,14 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "FIX 1 - Map Auto-Center on User Location"
+    - "FIX 2 - Background GPS Tracking"
+    - "FIX 3 - Local Leaderboard"
+    - "FIX 4 - Global/Local Leaderboard Toggle"
+    - "FIX 5 - Auto-Refresh Territories After Run"
+    - "FIX 6 - MultiPolygon Geometry Support"
+    - "FIX 7 - Improved Active Run UX"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
