@@ -165,6 +165,42 @@ export default function ProfileScreen() {
           value={profile?.globalRank > 0 ? `#${profile.globalRank}` : '--'}
           icon="🏆"
         />
+        <StatCard
+          label="STREAK"
+          value={`${profile?.currentStreak || 0} days`}
+          icon="🔥"
+          accent={profile?.currentStreak >= 7}
+        />
+        <StatCard
+          label="BEST STREAK"
+          value={`${profile?.longestStreak || 0} days`}
+          icon="⭐"
+        />
+      </View>
+
+      {/* Badges Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>BADGES</Text>
+        {badges.length === 0 ? (
+          <Text style={styles.emptyBadgesText}>Complete your first run to earn badges!</Text>
+        ) : (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.badgesScroll}
+            contentContainerStyle={styles.badgesContainer}
+          >
+            {badges.map((badge) => (
+              <View key={badge.id} style={styles.badgeCard}>
+                <View style={styles.badgeCircle}>
+                  <Text style={styles.badgeIcon}>{badge.icon}</Text>
+                </View>
+                <Text style={styles.badgeName}>{badge.name}</Text>
+                <Text style={styles.badgeDescription}>{badge.description}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        )}
       </View>
 
       {/* Recent Runs */}
