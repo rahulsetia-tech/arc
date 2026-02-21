@@ -321,6 +321,8 @@ async def get_me(current_user: dict = Depends(get_current_user)):
         "totalDistanceKm": user.get("totalDistanceKm", 0.0),
         "totalRuns": user.get("totalRuns", 0),
         "globalRank": user.get("globalRank", 0),
+        "currentStreak": user.get("currentStreak", 0),
+        "longestStreak": user.get("longestStreak", 0),
         "createdAt": user["createdAt"].isoformat() if isinstance(user.get("createdAt"), datetime) else str(user.get("createdAt", ""))
     }
 
@@ -808,6 +810,8 @@ async def get_user_profile(user_id: str, current_user: dict = Depends(get_curren
         "totalDistanceKm": round(user.get("totalDistanceKm", 0), 2),
         "totalRuns": user.get("totalRuns", 0),
         "globalRank": user.get("globalRank", 0),
+        "currentStreak": user.get("currentStreak", 0),
+        "longestStreak": user.get("longestStreak", 0),
         "createdAt": user["createdAt"].isoformat() if isinstance(user.get("createdAt"), datetime) else ""
     }
 
