@@ -107,123 +107,153 @@ user_problem_statement: Test the SUPERACRES app backend and frontend comprehensi
 backend:
   - task: "API Root Endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/ endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Returns correct message 'SUPERACRES API v1.0' and status 'running'"
 
   - task: "Test Territory Computation"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/test/territory endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Successfully computed territory with area 0.021678 km² for test coordinates"
 
   - task: "User Registration"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "POST /api/auth/register endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Successfully registered user testrunner1771691844 with unique email and returned JWT token"
 
   - task: "User Login"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "POST /api/auth/login endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Login functionality tested through registration flow - JWT token issued successfully"
 
   - task: "Get Current User"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/auth/me endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Returns complete user profile with all required fields (id, username, email, stats)"
 
   - task: "Start Run"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "POST /api/runs/start endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Successfully started run and returned runId with timestamp"
 
   - task: "End Run with Territory Calculation"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "POST /api/runs/end endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Successfully ended run with territory calculation (0.013589 km²) and distance tracking (0.169 km)"
 
   - task: "Global Leaderboard"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/leaderboard/global endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Returns leaderboard with 2 users showing ranks and stats"
 
   - task: "Territories in Bounding Box"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/territories endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Successfully returns territories in London bounding box (found 1 territory)"
 
   - task: "User Profile"
     implemented: true
-    working: "NA"
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "GET /api/users/{userId}/profile endpoint needs testing"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS: Returns complete user profile with all required fields and updated stats after run"
 
 frontend:
   - task: "Login Screen UI"
