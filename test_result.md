@@ -101,3 +101,213 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: Test the SUPERACRES app backend and frontend comprehensively
+
+backend:
+  - task: "API Root Endpoint"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/ endpoint needs testing"
+
+  - task: "Test Territory Computation"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/test/territory endpoint needs testing"
+
+  - task: "User Registration"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "POST /api/auth/register endpoint needs testing"
+
+  - task: "User Login"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "POST /api/auth/login endpoint needs testing"
+
+  - task: "Get Current User"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/auth/me endpoint needs testing"
+
+  - task: "Start Run"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "POST /api/runs/start endpoint needs testing"
+
+  - task: "End Run with Territory Calculation"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "POST /api/runs/end endpoint needs testing"
+
+  - task: "Global Leaderboard"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/leaderboard/global endpoint needs testing"
+
+  - task: "Territories in Bounding Box"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/territories endpoint needs testing"
+
+  - task: "User Profile"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "GET /api/users/{userId}/profile endpoint needs testing"
+
+frontend:
+  - task: "Login Screen UI"
+    implemented: true
+    working: "NA"
+    file: "app/(auth)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing not performed by testing agent as per instructions"
+
+  - task: "Register Screen UI"
+    implemented: true
+    working: "NA"
+    file: "app/(auth)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing not performed by testing agent as per instructions"
+
+  - task: "Map Screen"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing not performed by testing agent as per instructions"
+
+  - task: "Leaderboard Screen"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing not performed by testing agent as per instructions"
+
+  - task: "Profile Screen"
+    implemented: true
+    working: "NA"
+    file: "app/(tabs)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Frontend testing not performed by testing agent as per instructions"
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "API Root Endpoint"
+    - "Test Territory Computation"
+    - "User Registration"
+    - "User Login"
+    - "Get Current User"
+    - "Start Run"
+    - "End Run with Territory Calculation"
+    - "Global Leaderboard"
+    - "Territories in Bounding Box"
+    - "User Profile"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "Starting comprehensive backend API testing for SUPERACRES app. Frontend testing will not be performed as per instructions. Backend URL: https://acres-live.preview.emergentagent.com/api"
