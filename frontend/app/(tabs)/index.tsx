@@ -121,7 +121,7 @@ export default function MapScreen() {
             style={styles.startButton}
             onPress={() => router.push('/run/active')}
             activeOpacity={0.8}
-            data-testid="start-run-button"
+            testID="start-run-button"
           >
             <Text style={styles.startButtonIcon}>▶</Text>
             <Text style={styles.startButtonText}>START RUN</Text>

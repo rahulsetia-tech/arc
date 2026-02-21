@@ -144,7 +144,7 @@ export default function RunSummaryScreen() {
         <TouchableOpacity
           style={styles.primaryBtn}
           onPress={() => router.replace('/(tabs)')}
-          data-testid="back-to-map-button"
+          testID="back-to-map-button"
         >
           <Text style={styles.primaryBtnText}>VIEW MY TERRITORY</Text>
         </TouchableOpacity>

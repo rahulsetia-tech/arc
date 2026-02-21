@@ -214,7 +214,7 @@ export default function ActiveRunScreen() {
           style={styles.stopButton}
           onPress={handleStopRun}
           activeOpacity={0.8}
-          data-testid="stop-run-button"
+          testID="stop-run-button"
         >
           <Text style={styles.stopButtonText}>■ STOP RUN</Text>
         </TouchableOpacity>

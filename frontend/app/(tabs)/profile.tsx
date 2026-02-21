@@ -211,7 +211,7 @@ export default function ProfileScreen() {
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={handleLogout}
-          data-testid="logout-button"
+          testID="logout-button"
         >
           <Text style={styles.logoutText}>LOGOUT</Text>
         </TouchableOpacity>

@@ -63,7 +63,7 @@ export default function LoginScreen() {
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
-              data-testid="login-email-input"
+              testID="login-email-input"
             />
           </View>
 
@@ -76,7 +76,7 @@ export default function LoginScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              data-testid="login-password-input"
+              testID="login-password-input"
             />
           </View>
 
@@ -84,7 +84,7 @@ export default function LoginScreen() {
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleLogin}
             disabled={loading}
-            data-testid="login-submit-button"
+            testID="login-submit-button"
           >
             {loading ? (
               <ActivityIndicator color="#0D0D0D" />

@@ -70,7 +70,7 @@ export default function LeaderboardScreen() {
           styles.row,
           isCurrentUser && styles.myRow,
         ]}
-        data-testid={`leaderboard-row-${item.rank}`}
+        testID={`leaderboard-row-${item.rank}`}
       >
         <View style={styles.rankBadge}>
           <Text style={[styles.rankText, item.rank <= 3 && styles.rankTextTop]}>
