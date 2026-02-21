@@ -8,10 +8,15 @@ export default function Index() {
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
-    isAuthenticated().then((result) => {
-      setAuthed(result);
-      setLoading(false);
-    });
+    isAuthenticated()
+      .then((result) => {
+        setAuthed(result);
+        setLoading(false);
+      })
+      .catch(() => {
+        setAuthed(false);
+        setLoading(false);
+      });
   }, []);
 
   if (loading) {
