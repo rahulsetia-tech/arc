@@ -67,4 +67,17 @@ export const api = {
 
   updateProfile: (userId: string, data: { username?: string; avatarUrl?: string }) =>
     request(`/users/${userId}/profile`, { method: 'PUT', body: JSON.stringify(data) }),
+
+  // Badges
+  getUserBadges: (userId: string) => request(`/badges/${userId}`),
+  getAllBadgeDefinitions: () => request('/badges/definitions/all'),
+
+  // Competition
+  getCurrentCompetition: () => request('/competition/current'),
+
+  // Notifications
+  savePushToken: (token: string, platform: string) =>
+    request('/users/push-token', { method: 'POST', body: JSON.stringify({ token, platform }) }),
+  getNotifications: () => request('/notifications'),
+  markNotificationsRead: () => request('/notifications/read-all', { method: 'POST' }),
 };
