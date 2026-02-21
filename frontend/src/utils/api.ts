@@ -1,6 +1,11 @@
 import { getToken } from './auth';
+import { Platform } from 'react-native';
 
-const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+// On web, use relative URL so the proxy routes /api/* to port 8001
+// On native, use the full backend URL
+const BASE_URL = Platform.OS === 'web'
+  ? ''
+  : (process.env.EXPO_PUBLIC_BACKEND_URL || '');
 
 async function getHeaders(withAuth = true): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
