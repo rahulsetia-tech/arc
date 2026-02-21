@@ -29,6 +29,7 @@ export default function LoginScreen() {
     try {
       const result = await api.login(email.trim().toLowerCase(), password) as any;
       await saveAuth(result.token, result.user);
+      // Navigate to the main app
       router.replace('/(tabs)');
     } catch (err: any) {
       Alert.alert('Login Failed', err.message || 'Invalid credentials');
