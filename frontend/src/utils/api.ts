@@ -1,10 +1,6 @@
 import { getToken } from './auth';
-import { Platform } from 'react-native';
 
 // Use full backend URL for API calls on all platforms
-// EXPO_PUBLIC_BACKEND_URL = https://acres-live.preview.emergentagent.com
-// On native: uses the same URL
-// On web: cross-origin request to the backend (CORS is allowed for all origins)
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
 
 async function getHeaders(withAuth = true): Promise<Record<string, string>> {
@@ -61,6 +57,10 @@ export const api = {
 
   // Leaderboard
   getGlobalLeaderboard: () => request('/leaderboard/global'),
+
+  // FIX 4: Local leaderboard
+  getLocalLeaderboard: (lat: number, lng: number, radiusKm: number = 20) =>
+    request(`/leaderboard/local?lat=${lat}&lng=${lng}&radius_km=${radiusKm}`),
 
   // Profile
   getUserProfile: (userId: string) => request(`/users/${userId}/profile`),

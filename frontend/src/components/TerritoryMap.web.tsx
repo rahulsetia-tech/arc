@@ -1,4 +1,6 @@
 // Web fallback for territory map
+// FIX 1: initialRegion prop added for consistency
+// FIX 6: MultiPolygon handling (display count)
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -17,9 +19,15 @@ interface TerritoryMapProps {
   currentUserId?: string;
   onRegionChange: (region: any) => void;
   onTerritoryPress: (territory: Territory) => void;
+  initialRegion?: {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  };
 }
 
-export function TerritoryMap({ territories }: TerritoryMapProps) {
+export const TerritoryMap = React.forwardRef<any, TerritoryMapProps>(({ territories }, _ref) => {
   return (
     <View style={styles.container}>
       <Text style={styles.icon}>🗺️</Text>
@@ -30,7 +38,9 @@ export function TerritoryMap({ territories }: TerritoryMapProps) {
       </View>
     </View>
   );
-}
+});
+
+TerritoryMap.displayName = 'TerritoryMap';
 
 const styles = StyleSheet.create({
   container: {
