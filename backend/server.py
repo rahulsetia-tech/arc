@@ -221,6 +221,9 @@ async def startup_event():
         await db.runs.create_index([("routeCoordinates", "2dsphere")])
         await db.runs.create_index("userId")
         await db.territories.create_index("userId")
+        await db.badges.create_index("userId")
+        await db.notifications.create_index("userId")
+        await db.push_tokens.create_index("userId", unique=True)
         logger.info("MongoDB indexes created successfully")
     except Exception as e:
         logger.error(f"Index creation error: {e}")
