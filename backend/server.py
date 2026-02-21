@@ -556,6 +556,53 @@ async def end_run(req: EndRunRequest, current_user: dict = Depends(get_current_u
         }}
     )
 
+    # Streak calculation
+    today = datetime.utcnow().date()
+    user_doc = await db.users.find_one({"_id": ObjectId(user_id)})
+    last_run_date = user_doc.get("lastRunDate")
+
+    if last_run_date:
+        if isinstance(last_run_date, datetime):
+            last_date = last_run_date.date()
+        else:
+            last_date = last_run_date
+        
+        diff = (today - last_date).days
+        if diff == 1:
+            # Consecutive day — increment streak
+            new_streak = user_doc.get("currentStreak", 0) + 1
+        elif diff == 0:
+            # Same day — keep current streak
+            new_streak = user_doc.get("currentStreak", 0)
+        else:
+            # Streak broken — reset to 1
+            new_streak = 1
+    else:
+        # First ever run
+        new_streak = 1
+
+    longest = max(new_streak, user_doc.get("longestStreak", 0))
+    await db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"currentStreak": new_streak, "longestStreak": longest, "lastRunDate": datetime.utcnow()}}
+    )
+
+    # Check and award badges
+    new_badges = await check_and_award_badges(user_id, stolen_count=len(stolen_from))
+
+    # Save notification for stolen territory owners
+    for stolen_info in stolen_from:
+        notification = {
+            "userId": ObjectId(stolen_info["userId"]),
+            "type": "territory_stolen",
+            "title": "Territory Stolen! ⚔️",
+            "body": f"@{username} just stole {round(stolen_info['areaKm2'] * 1000000)} m² of your territory!",
+            "data": {"stealerUsername": username, "areaKm2": stolen_info["areaKm2"]},
+            "read": False,
+            "createdAt": datetime.utcnow()
+        }
+        await db.notifications.insert_one(notification)
+
     # Update global ranks
     await update_global_ranks()
 
@@ -568,10 +615,13 @@ async def end_run(req: EndRunRequest, current_user: dict = Depends(get_current_u
             "territoryGainedKm2": round(territory_gained_km2, 6),
             "territoryStolenFrom": stolen_from,
             "territoryPolygon": final_polygon_geojson,
-            "routeCoordinates": route_geojson
+            "routeCoordinates": route_geojson,
+            "currentStreak": new_streak,
+            "longestStreak": longest
         },
         "territoryGained": round(territory_gained_km2, 6),
-        "territoryStolenFrom": stolen_from
+        "territoryStolenFrom": stolen_from,
+        "newBadges": new_badges
     }
 
 
