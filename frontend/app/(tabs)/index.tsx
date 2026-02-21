@@ -8,7 +8,8 @@ import {
   Animated,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import * as Location from 'expo-location';
 import { api } from '../../src/utils/api';
 import { getUser } from '../../src/utils/auth';
 import { userColor } from '../../src/utils/geo';
@@ -24,14 +25,26 @@ interface Territory {
   capturedAt: string;
 }
 
+const LONDON_FALLBACK = {
+  latitude: 51.5074,
+  longitude: -0.1278,
+  latitudeDelta: 0.05,
+  longitudeDelta: 0.05,
+};
+
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const [territories, setTerritories] = useState<Territory[]>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [selectedTerritory, setSelectedTerritory] = useState<Territory | null>(null);
+  // FIX 1: user location state
+  const [userRegion, setUserRegion] = useState<any>(null);
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  // FIX 1: ref to MapView for animateToRegion
+  const mapRef = useRef<any>(null);
 
+  // Pulse animation for START RUN button
   useEffect(() => {
     const pulse = Animated.loop(
       Animated.sequence([
@@ -45,14 +58,42 @@ export default function MapScreen() {
 
   useEffect(() => {
     getUser().then(setCurrentUser);
-    // Load initial territories (London area)
-    loadTerritories({
-      latitude: 51.5074,
-      longitude: -0.1278,
-      latitudeDelta: 0.05,
-      longitudeDelta: 0.05,
-    });
+    // FIX 1: get user location on mount
+    initLocation();
   }, []);
+
+  // FIX 5: Refresh territories when map tab gains focus (after returning from a run)
+  useFocusEffect(
+    useCallback(() => {
+      const region = userRegion || LONDON_FALLBACK;
+      loadTerritories(region);
+    }, [userRegion])
+  );
+
+  async function initLocation() {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        const region = {
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        };
+        setUserRegion(region);
+        loadTerritories(region);
+      } else {
+        // Permission denied - fall back to London
+        loadTerritories(LONDON_FALLBACK);
+      }
+    } catch {
+      // Any error - fall back to London
+      loadTerritories(LONDON_FALLBACK);
+    }
+  }
 
   const loadTerritories = useCallback(async (region: any) => {
     try {
@@ -71,13 +112,38 @@ export default function MapScreen() {
     }
   }, []);
 
+  // FIX 1: "My Location" button handler
+  async function goToMyLocation() {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') return;
+      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      const region = {
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      };
+      setUserRegion(region);
+      // Animate map to user location if mapRef is available
+      if (mapRef.current?.animateToRegion) {
+        mapRef.current.animateToRegion(region, 600);
+      }
+      loadTerritories(region);
+    } catch (err) {
+      console.log('Location error:', err);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <TerritoryMap
+        ref={mapRef}
         territories={territories}
         currentUserId={currentUser?.id}
         onRegionChange={loadTerritories}
         onTerritoryPress={setSelectedTerritory}
+        initialRegion={userRegion || LONDON_FALLBACK}
       />
 
       {/* Header */}
@@ -113,6 +179,17 @@ export default function MapScreen() {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* FIX 1: My Location button (bottom-right, above START RUN) */}
+      <View style={[styles.myLocationContainer, { bottom: insets.bottom + 148 }]}>
+        <TouchableOpacity
+          style={styles.myLocationButton}
+          onPress={goToMyLocation}
+          testID="my-location-button"
+        >
+          <Text style={styles.myLocationIcon}>📍</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* START RUN Button */}
       <View style={[styles.fabContainer, { paddingBottom: insets.bottom + 80 }]}>
@@ -177,6 +254,28 @@ const styles = StyleSheet.create({
   calloutArea: { color: '#888', fontSize: 13, marginTop: 2 },
   calloutClose: { padding: 4 },
   calloutCloseText: { color: '#888', fontSize: 16 },
+  // FIX 1: My Location button
+  myLocationContainer: {
+    position: 'absolute',
+    right: 16,
+    zIndex: 10,
+  },
+  myLocationButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#1A1A1A',
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  myLocationIcon: { fontSize: 22 },
   fabContainer: {
     position: 'absolute',
     bottom: 0,
