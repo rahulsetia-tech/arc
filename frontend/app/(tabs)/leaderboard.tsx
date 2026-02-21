@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
 import { api } from '../../src/utils/api';
 import { getUser } from '../../src/utils/auth';
 import { userColor } from '../../src/utils/geo';
@@ -29,16 +30,43 @@ export default function LeaderboardScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  // FIX 4: mode toggle state
+  const [mode, setMode] = useState<'global' | 'local'>('global');
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     getUser().then(setCurrentUser);
-    loadLeaderboard();
+    // FIX 4: get user location on mount for local leaderboard
+    fetchUserLocation();
+    loadLeaderboard('global', null);
   }, []);
 
-  async function loadLeaderboard() {
+  async function fetchUserLocation() {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        setUserLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
+      }
+    } catch {
+      // silently fail — local leaderboard button will show a prompt
+    }
+  }
+
+  async function loadLeaderboard(
+    targetMode: 'global' | 'local',
+    location: { lat: number; lng: number } | null
+  ) {
     try {
       setLoading(true);
-      const data = await api.getGlobalLeaderboard() as LeaderboardEntry[];
+      let data: LeaderboardEntry[];
+      if (targetMode === 'local' && location) {
+        data = await api.getLocalLeaderboard(location.lat, location.lng) as LeaderboardEntry[];
+      } else {
+        data = await api.getGlobalLeaderboard() as LeaderboardEntry[];
+      }
       setEntries(data);
     } catch (err) {
       console.log('Leaderboard error:', err);
@@ -49,8 +77,23 @@ export default function LeaderboardScreen() {
 
   async function handleRefresh() {
     setRefreshing(true);
-    await loadLeaderboard();
+    await loadLeaderboard(mode, userLocation);
     setRefreshing(false);
+  }
+
+  // FIX 4: Handle toggle between global and local
+  function handleModeSwitch(newMode: 'global' | 'local') {
+    if (newMode === mode) return;
+    if (newMode === 'local' && !userLocation) {
+      // Try to get location first
+      fetchUserLocation().then(() => {
+        setMode(newMode);
+        loadLeaderboard(newMode, userLocation);
+      });
+      return;
+    }
+    setMode(newMode);
+    loadLeaderboard(newMode, userLocation);
   }
 
   function getRankEmoji(rank: number): string {
@@ -66,10 +109,7 @@ export default function LeaderboardScreen() {
 
     return (
       <View
-        style={[
-          styles.row,
-          isCurrentUser && styles.myRow,
-        ]}
+        style={[styles.row, isCurrentUser && styles.myRow]}
         testID={`leaderboard-row-${item.rank}`}
       >
         <View style={styles.rankBadge}>
@@ -94,8 +134,7 @@ export default function LeaderboardScreen() {
           <Text style={[styles.area, isCurrentUser && styles.myArea]}>
             {item.totalAreaKm2 < 0.001
               ? `${Math.round(item.totalAreaKm2 * 1000000)} m²`
-              : `${item.totalAreaKm2.toFixed(3)} km²`
-            }
+              : `${item.totalAreaKm2.toFixed(3)} km²`}
           </Text>
         </View>
       </View>
@@ -106,7 +145,31 @@ export default function LeaderboardScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <Text style={styles.title}>LEADERBOARD</Text>
-        <Text style={styles.subtitle}>Global Rankings by Territory</Text>
+        <Text style={styles.subtitle}>
+          {mode === 'global' ? 'Global Rankings by Territory' : 'Local Rankings (20km radius)'}
+        </Text>
+      </View>
+
+      {/* FIX 4: Global / Local toggle bar */}
+      <View style={styles.toggleBar}>
+        <TouchableOpacity
+          style={[styles.toggleBtn, mode === 'global' && styles.toggleBtnActive]}
+          onPress={() => handleModeSwitch('global')}
+          testID="toggle-global"
+        >
+          <Text style={[styles.toggleBtnText, mode === 'global' && styles.toggleBtnTextActive]}>
+            🌍 GLOBAL
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.toggleBtn, mode === 'local' && styles.toggleBtnActive]}
+          onPress={() => handleModeSwitch('local')}
+          testID="toggle-local"
+        >
+          <Text style={[styles.toggleBtnText, mode === 'local' && styles.toggleBtnTextActive]}>
+            📍 LOCAL
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {loading && !refreshing ? (
@@ -118,7 +181,11 @@ export default function LeaderboardScreen() {
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyIcon}>🏆</Text>
           <Text style={styles.emptyTitle}>No Rankings Yet</Text>
-          <Text style={styles.emptyText}>Be the first to complete a run and claim territory!</Text>
+          <Text style={styles.emptyText}>
+            {mode === 'local'
+              ? 'No runners with territory in your area yet. Start a run!'
+              : 'Be the first to complete a run and claim territory!'}
+          </Text>
         </View>
       ) : (
         <FlatList
@@ -155,7 +222,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    paddingBottom: 16,
+    paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#2A2A2A',
   },
@@ -170,6 +237,37 @@ const styles = StyleSheet.create({
     color: '#888',
     letterSpacing: 1,
     marginTop: 4,
+  },
+  // FIX 4: Toggle bar styles
+  toggleBar: {
+    flexDirection: 'row',
+    margin: 16,
+    marginBottom: 8,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+    padding: 4,
+    gap: 4,
+  },
+  toggleBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 9,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  toggleBtnActive: {
+    backgroundColor: '#00FF88',
+  },
+  toggleBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#888',
+    letterSpacing: 1,
+  },
+  toggleBtnTextActive: {
+    color: '#0D0D0D',
   },
   loadingContainer: {
     flex: 1,
@@ -205,6 +303,7 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 16,
+    paddingTop: 8,
     gap: 8,
   },
   listHeader: {
