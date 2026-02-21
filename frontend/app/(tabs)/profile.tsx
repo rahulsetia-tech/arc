@@ -31,6 +31,7 @@ export default function ProfileScreen() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [runs, setRuns] = useState<Run[]>([]);
+  const [badges, setBadges] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -44,12 +45,14 @@ export default function ProfileScreen() {
   async function loadProfile(userId: string) {
     try {
       setLoading(true);
-      const [profileData, runsData] = await Promise.all([
+      const [profileData, runsData, badgesData] = await Promise.all([
         api.getUserProfile(userId) as any,
         api.getUserRuns(userId) as any,
+        api.getUserBadges(userId) as any,
       ]);
       setProfile(profileData);
       setRuns(runsData || []);
+      setBadges(badgesData || []);
     } catch (err) {
       console.log('Profile load error:', err);
     } finally {
