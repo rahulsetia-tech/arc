@@ -139,6 +139,33 @@ export default function RunSummaryScreen() {
         </View>
       )}
 
+      {/* Streak Card */}
+      {runResult?.run?.currentStreak > 0 && (
+        <View style={styles.streakCard}>
+          <Text style={styles.streakEmoji}>🔥</Text>
+          <Text style={styles.streakText}>
+            {runResult.run.currentStreak} day streak!
+          </Text>
+        </View>
+      )}
+
+      {/* New Badges Card */}
+      {runResult?.newBadges?.length > 0 && (
+        <View style={styles.newBadgesCard}>
+          <Text style={styles.newBadgesTitle}>🎖️ NEW BADGE!</Text>
+          {runResult.newBadges.map((badge: any) => (
+            <View key={badge.id} style={styles.newBadgeItem}>
+              <Text style={styles.newBadgeIcon}>{badge.icon}</Text>
+              <View style={styles.newBadgeTextContainer}>
+                <Text style={styles.newBadgeName}>{badge.name}</Text>
+                <Text style={styles.newBadgeDescription}>{badge.description}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+
       {/* Actions */}
       <View style={styles.actions}>
         <TouchableOpacity
