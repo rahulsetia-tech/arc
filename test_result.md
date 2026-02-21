@@ -255,6 +255,21 @@ backend:
         agent: "testing"
         comment: "✅ PASS: Returns complete user profile with all required fields and updated stats after run"
 
+  - task: "FIX 3 - Local Leaderboard"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Local leaderboard endpoint needs to perform real geospatial query instead of returning global leaderboard"
+      - working: true
+        agent: "main"
+        comment: "✅ Fixed: Implemented proper $geoIntersects aggregation pipeline to return users with territories near a given location. Manually tested with curl - returns 1 entry for London coords"
+
 frontend:
   - task: "Login Screen UI"
     implemented: true
